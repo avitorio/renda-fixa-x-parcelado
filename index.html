@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comprar parcelado e deixar rendendo · Calculadora</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0D1F1A;          /* deep forest ink - hero panel */
+    --ink-2:#14302a;        /* panel gradient end */
+    --paper:#F2F4F1;        /* cool off-white page */
+    --card:#FFFFFF;
+    --emerald:#1DBF8E;      /* rendimento */
+    --emerald-dim:#15997090;
+    --clay:#D08C45;         /* parcelas saindo */
+    --text:#16241F;
+    --muted:#67756E;
+    --line:#E2E6E1;
+    --line-ink:#ffffff1f;
+    --shadow:0 1px 2px #0d1f1a0a,0 12px 30px -12px #0d1f1a1f;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    font-family:'Inter',system-ui,sans-serif;
+    background:var(--paper);
+    color:var(--text);
+    line-height:1.5;
+    padding:clamp(16px,4vw,48px);
+    min-height:100vh;
+  }
+  .wrap{max-width:980px;margin:0 auto}
+
+  /* ---- header ---- */
+  header{margin-bottom:28px}
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12px;letter-spacing:.14em;text-transform:uppercase;
+    color:var(--emerald);font-weight:600;margin-bottom:10px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .eyebrow::before{content:"";width:22px;height:1.5px;background:var(--emerald)}
+  h1{
+    font-family:'Space Grotesk',sans-serif;
+    font-weight:600;font-size:clamp(26px,4.4vw,40px);
+    line-height:1.08;letter-spacing:-.02em;max-width:18ch;
+  }
+  .lede{color:var(--muted);margin-top:12px;max-width:62ch;font-size:15px}
+
+  /* ---- layout grid ---- */
+  .grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:18px;margin-top:28px}
+  @media(max-width:760px){.grid{grid-template-columns:1fr}}
+
+  /* ---- inputs card ---- */
+  .card{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
+  .inputs{padding:22px}
+  .inputs h2,.ledger h2{
+    font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;
+    letter-spacing:.02em;text-transform:uppercase;color:var(--muted);margin-bottom:18px;
+  }
+  .field{margin-bottom:16px}
+  .field:last-child{margin-bottom:0}
+  .field label{display:block;font-size:13.5px;font-weight:500;margin-bottom:7px}
+  .field .hint{color:var(--muted);font-weight:400;font-size:12px}
+  .control{position:relative;display:flex;align-items:center}
+  .control .affix{
+    position:absolute;font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--muted);
+    pointer-events:none;
+  }
+  .control .affix.left{left:14px}
+  .control .affix.right{right:14px}
+  input[type=number]{
+    width:100%;font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:500;
+    color:var(--text);background:#FBFCFB;border:1.5px solid var(--line);border-radius:11px;
+    padding:12px 14px;transition:border-color .15s,box-shadow .15s;-moz-appearance:textfield;
+  }
+  input.has-left{padding-left:34px}
+  input.has-right{padding-right:42px}
+  input[type=number]:focus{outline:none;border-color:var(--emerald);box-shadow:0 0 0 3px #1dbf8e2e}
+  input::-webkit-outer-spin-button,input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .toggles{margin-top:4px;border-top:1px solid var(--line);padding-top:16px}
+  .switch{display:flex;align-items:flex-start;gap:11px;cursor:pointer;margin-bottom:13px;user-select:none}
+  .switch:last-child{margin-bottom:0}
+  .switch input{position:absolute;opacity:0;width:0;height:0}
+  .track{flex:0 0 auto;width:38px;height:22px;border-radius:22px;background:var(--line);position:relative;transition:background .18s;margin-top:1px}
+  .track::after{content:"";position:absolute;top:2px;left:2px;width:18px;height:18px;border-radius:50%;background:#fff;box-shadow:0 1px 2px #0003;transition:transform .18s}
+  .switch input:checked + .track{background:var(--emerald)}
+  .switch input:checked + .track::after{transform:translateX(16px)}
+  .switch input:focus-visible + .track{box-shadow:0 0 0 3px #1dbf8e2e}
+  .switch .lbl{font-size:13.5px;font-weight:500}
+  .switch .lbl small{display:block;color:var(--muted);font-weight:400;font-size:12px;margin-top:1px}
+
+  /* ---- result hero ---- */
+  .hero{
+    background:radial-gradient(120% 120% at 100% 0%,var(--ink-2),var(--ink));
+    color:#EAF2EE;border-radius:18px;padding:26px 26px 22px;box-shadow:var(--shadow);
+    display:flex;flex-direction:column;
+  }
+  .hero .tag{font-family:'JetBrains Mono',monospace;font-size:11.5px;letter-spacing:.13em;text-transform:uppercase;color:#9fc7b8;margin-bottom:6px}
+  .bignum{
+    font-family:'Space Grotesk',sans-serif;font-weight:600;letter-spacing:-.02em;
+    font-size:clamp(40px,8.5vw,60px);line-height:1;color:#fff;
+    font-variant-numeric:tabular-nums;
+  }
+  .bignum .cents{color:var(--emerald)}
+  .hero .sub{color:#a8c6ba;font-size:13.5px;margin-top:10px;max-width:34ch}
+  .hero .sub b{color:#EAF2EE;font-weight:600}
+  .pill{
+    align-self:flex-start;margin-top:16px;background:#1dbf8e1f;border:1px solid #1dbf8e4d;
+    color:var(--emerald);font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:600;
+    padding:6px 11px;border-radius:9px;
+  }
+  .hero hr{border:none;border-top:1px solid var(--line-ink);margin:18px 0}
+  .mini{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .mini .k{font-size:11.5px;color:#8fb1a4;letter-spacing:.02em;text-transform:uppercase;font-family:'JetBrains Mono',monospace}
+  .mini .v{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:500;color:#EAF2EE;margin-top:3px;font-variant-numeric:tabular-nums}
+
+  /* ---- chart ---- */
+  .chart-card{margin-top:18px;padding:22px}
+  .chart-head{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;margin-bottom:6px}
+  .chart-head h2{font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;letter-spacing:.02em;text-transform:uppercase;color:var(--muted)}
+  .legend{display:flex;gap:16px;font-size:12px;color:var(--muted)}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .swatch{width:10px;height:10px;border-radius:3px;display:inline-block}
+  .chart{display:flex;align-items:flex-end;gap:clamp(3px,1.4vw,10px);height:190px;margin-top:18px;padding-top:14px}
+  .bar{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;position:relative;min-width:0}
+  .bar .stack{width:100%;max-width:46px;display:flex;flex-direction:column;justify-content:flex-end;border-radius:5px 5px 0 0;overflow:hidden;transition:height .35s ease}
+  .bar .body{background:linear-gradient(180deg,#cfe7df,#bcdccf);width:100%}
+  .bar .gain{background:var(--emerald);width:100%}
+  .bar .mlabel{font-family:'JetBrains Mono',monospace;font-size:10.5px;color:var(--muted);margin-top:7px}
+  .bar .tip{
+    position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%) translateY(4px);
+    background:var(--ink);color:#EAF2EE;font-size:11.5px;font-family:'JetBrains Mono',monospace;
+    padding:7px 9px;border-radius:8px;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .15s,transform .15s;z-index:5;box-shadow:0 8px 20px -8px #0d1f1a80;
+  }
+  .bar .tip b{color:var(--emerald)}
+  .bar:hover .tip{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  /* ---- ledger ---- */
+  .ledger{margin-top:18px;padding:22px;overflow-x:auto}
+  table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+  thead th{
+    font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:.05em;text-transform:uppercase;
+    color:var(--muted);font-weight:600;text-align:right;padding:0 0 10px;border-bottom:1px solid var(--line);
+  }
+  thead th:first-child{text-align:left}
+  tbody td{font-family:'JetBrains Mono',monospace;font-size:13px;text-align:right;padding:9px 0;border-bottom:1px solid var(--line)}
+  tbody td:first-child{text-align:left;color:var(--muted)}
+  tbody tr:last-child td{border-bottom:none}
+  tbody .gain-c{color:var(--emerald);font-weight:500}
+  tbody .pay-c{color:var(--clay)}
+  tfoot td{font-family:'Space Grotesk',sans-serif;font-size:14px;font-weight:600;text-align:right;padding-top:12px}
+  tfoot td:first-child{text-align:left;text-transform:uppercase;font-size:11px;letter-spacing:.05em;color:var(--muted);font-family:'JetBrains Mono',monospace}
+  tfoot .gain-c{color:var(--emerald)}
+
+  footer{margin-top:26px;color:var(--muted);font-size:12px;line-height:1.6;max-width:70ch}
+  footer b{color:var(--text);font-weight:600}
+  .disclaimer{margin-top:10px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Renda fixa &times; compra parcelada</div>
+    <h1>Quanto rende deixar o dinheiro no CDB enquanto você paga em parcelas?</h1>
+    <p class="lede">Em vez de pagar a compra à vista, você deixa o valor cheio num CDB rendendo e saca uma parcela por mês. O que o dinheiro rende enquanto espera é a sua economia. Ajuste os números e veja o resultado.</p>
+  </header>
+
+  <div class="grid">
+    <!-- INPUTS -->
+    <section class="card inputs">
+      <h2>Os números da sua compra</h2>
+
+      <div class="field">
+        <label for="valor">Valor da compra</label>
+        <div class="control">
+          <span class="affix left">R$</span>
+          <input class="has-left" type="number" id="valor" value="10000" min="0" step="100" inputmode="decimal">
+        </div>
+      </div>
+
+      <div class="row2">
+        <div class="field">
+          <label for="parcelas">Parcelas <span class="hint">(sem juros)</span></label>
+          <div class="control">
+            <input type="number" id="parcelas" value="10" min="1" max="60" step="1" inputmode="numeric">
+            <span class="affix right">x</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="cdi">CDI ao ano</label>
+          <div class="control">
+            <input class="has-right" type="number" id="cdi" value="14.15" min="0" step="0.05" inputmode="decimal">
+            <span class="affix right">%</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="pct">Quanto do CDI o CDB rende</label>
+        <div class="control">
+          <input class="has-right" type="number" id="pct" value="100" min="0" step="1" inputmode="decimal">
+          <span class="affix right">% do CDI</span>
+        </div>
+      </div>
+
+      <div class="toggles">
+        <label class="switch">
+          <input type="checkbox" id="ir" checked>
+          <span class="track"></span>
+          <span class="lbl">Descontar Imposto de Renda
+            <small>Tabela regressiva sobre o rendimento (15% a 22,5%)</small>
+          </span>
+        </label>
+        <label class="switch">
+          <input type="checkbox" id="aoato">
+          <span class="track"></span>
+          <span class="lbl">1ª parcela no ato da compra
+            <small>Desligado = primeira parcela 30 dias depois (cartão)</small>
+          </span>
+        </label>
+      </div>
+    </section>
+
+    <!-- RESULT -->
+    <section class="hero">
+      <div class="tag">Sua economia</div>
+      <div class="bignum" id="bignum">R$ 0</div>
+      <p class="sub">Esse é o rendimento líquido que sobra no CDB depois de pagar <b id="sub-parcelas">todas as parcelas</b>. Na prática, é como ganhar um desconto na compra.</p>
+      <div class="pill" id="pill">desconto de 0%</div>
+      <hr>
+      <div class="mini">
+        <div><div class="k">Parcela mensal</div><div class="v" id="m-parcela">R$ 0</div></div>
+        <div><div class="k">Custo real da compra</div><div class="v" id="m-custo">R$ 0</div></div>
+        <div><div class="k">Rendimento bruto</div><div class="v" id="m-bruto">R$ 0</div></div>
+        <div><div class="k">Imposto de Renda</div><div class="v" id="m-ir">R$ 0</div></div>
+      </div>
+    </section>
+  </div>
+
+  <!-- CHART -->
+  <section class="card chart-card">
+    <div class="chart-head">
+      <h2>O saldo derretendo mês a mês</h2>
+      <div class="legend">
+        <span><i class="swatch" style="background:#bcdccf"></i>Saldo aplicado</span>
+        <span><i class="swatch" style="background:var(--emerald)"></i>Rendimento do mês</span>
+      </div>
+    </div>
+    <div class="chart" id="chart"></div>
+  </section>
+
+  <!-- LEDGER -->
+  <section class="card ledger">
+    <h2>Extrato do CDB</h2>
+    <table>
+      <thead>
+        <tr><th>Mês</th><th>Saldo aplicado</th><th>Rendimento</th><th>Parcela paga</th><th>Saldo final</th></tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+      <tfoot>
+        <tr><td>Total</td><td></td><td class="gain-c" id="f-rend">R$ 0</td><td id="f-pago">R$ 0</td><td class="gain-c" id="f-final">R$ 0</td></tr>
+      </tfoot>
+    </table>
+  </section>
+
+  <footer>
+    <b>Como a conta funciona:</b> o CDB rende juros compostos sobre o saldo (taxa mensal equivalente ao CDI anual escolhido). Todo mês entra o rendimento e sai uma parcela. Como você deposita o valor da compra e saca exatamente esse mesmo valor em parcelas, o que sobra no fim é puro rendimento — a sua economia.
+    <div class="disclaimer"><b>Estimativa, não garantia.</b> O CDI é pós-fixado e muda com a Selic. O IR usa a tabela regressiva pelo prazo total da aplicação (uma simplificação — na prática cada saque é tributado pelo seu próprio prazo). Não considera IOF (zera após 30 dias) nem eventual carência de liquidez do CDB. Confira sempre as condições do seu título e a taxa CDI vigente.</div>
+  </footer>
+</div>
+
+<script>
+(function(){
+  const $ = id => document.getElementById(id);
+  const els = {
+    valor:$('valor'), parcelas:$('parcelas'), cdi:$('cdi'), pct:$('pct'),
+    ir:$('ir'), aoato:$('aoato')
+  };
+
+  const brl = (v, dec=2) => v.toLocaleString('pt-BR',{style:'currency',currency:'BRL',minimumFractionDigits:dec,maximumFractionDigits:dec});
+
+  // IR regressivo pelo prazo total (dias ≈ meses*30)
+  function aliquotaIR(meses){
+    const dias = meses*30;
+    if(dias <= 180) return 0.225;
+    if(dias <= 360) return 0.20;
+    if(dias <= 720) return 0.175;
+    return 0.15;
+  }
+
+  function calc(){
+    const valor = Math.max(0, +els.valor.value || 0);
+    const n = Math.max(1, Math.min(120, Math.round(+els.parcelas.value || 1)));
+    const cdiAA = Math.max(0, +els.cdi.value || 0)/100;
+    const pct = Math.max(0, +els.pct.value || 0)/100;
+    const descontaIR = els.ir.checked;
+    const aoAto = els.aoato.checked;
+
+    const cdbAA = cdiAA * pct;                       // rendimento anual efetivo do CDB
+    const i = Math.pow(1 + cdbAA, 1/12) - 1;         // taxa mensal equivalente
+    const parcela = valor / n;
+
+    // Simulação
+    const rows = [];           // {mes, saldoIni, rend, pago, saldoFim}
+    let saldo, mesesAtivos;
+    if(aoAto){
+      saldo = valor - parcela; // paga 1ª na hora, sem render
+      mesesAtivos = n - 1;
+    } else {
+      saldo = valor;
+      mesesAtivos = n;
+    }
+
+    let totalRend = 0;
+    for(let m=1; m<=mesesAtivos; m++){
+      const ini = saldo;
+      const rend = ini * i;
+      totalRend += rend;
+      saldo = ini + rend - parcela;
+      rows.push({mes:m, ini, rend, pago:parcela, fim:saldo});
+    }
+
+    // O saldo final == rendimento bruto acumulado (dinheiro entra = sai = valor)
+    const bruto = Math.max(0, saldo);
+    const aliq = aliquotaIR(n);
+    const imposto = descontaIR ? bruto * aliq : 0;
+    const liquido = bruto - imposto;
+    const custoReal = valor - liquido;
+    const descontoPct = valor > 0 ? (liquido / valor) * 100 : 0;
+
+    return {valor,n,parcela,i,rows,bruto,imposto,liquido,custoReal,descontoPct,aliq,descontaIR,aoAto,totalRend};
+  }
+
+  function renderBignum(v){
+    const s = brl(v);                     // "R$ 686,59"
+    const idx = s.lastIndexOf(',');
+    if(idx === -1){ $('bignum').textContent = s; return; }
+    $('bignum').innerHTML = s.slice(0,idx) + '<span class="cents">' + s.slice(idx) + '</span>';
+  }
+
+  function render(){
+    const r = calc();
+
+    renderBignum(r.liquido);
+    $('pill').textContent = 'equivale a ' + r.descontoPct.toLocaleString('pt-BR',{maximumFractionDigits:2}) + '% de desconto';
+    $('sub-parcelas').textContent = r.n + 'x de ' + brl(r.parcela);
+    $('m-parcela').textContent = brl(r.parcela);
+    $('m-custo').textContent = brl(r.custoReal);
+    $('m-bruto').textContent = brl(r.bruto);
+    $('m-ir').textContent = r.descontaIR ? '\u2212 ' + brl(r.imposto) + '  (' + (r.aliq*100).toLocaleString('pt-BR') + '%)' : 'isento';
+
+    // chart
+    const chart = $('chart');
+    chart.innerHTML = '';
+    const maxIni = Math.max(...r.rows.map(x=>x.ini), 1);
+    r.rows.forEach(x=>{
+      const h = (x.ini / maxIni) * 100;                 // altura total da barra (% do container)
+      const gainPart = x.ini>0 ? (x.rend / x.ini) * h : 0;
+      const bodyPart = Math.max(0, h - gainPart);
+      const bar = document.createElement('div');
+      bar.className = 'bar';
+      bar.innerHTML =
+        '<div class="tip">M\u00eas '+x.mes+' \u00b7 saldo '+brl(x.ini,0)+'<br>rende <b>'+brl(x.rend)+'</b></div>'+
+        '<div class="stack" style="height:'+h+'%">'+
+          '<div class="gain" style="height:'+(h>0?(gainPart/h*100):0)+'%"></div>'+
+          '<div class="body" style="height:'+(h>0?(bodyPart/h*100):0)+'%"></div>'+
+        '</div>'+
+        '<div class="mlabel">'+x.mes+'</div>';
+      chart.appendChild(bar);
+    });
+
+    // ledger
+    const tb = $('tbody');
+    tb.innerHTML = '';
+    r.rows.forEach(x=>{
+      const tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td>M\u00eas '+x.mes+'</td>'+
+        '<td>'+brl(x.ini)+'</td>'+
+        '<td class="gain-c">+ '+brl(x.rend)+'</td>'+
+        '<td class="pay-c">\u2212 '+brl(x.pago)+'</td>'+
+        '<td>'+brl(Math.max(0,x.fim))+'</td>';
+      tb.appendChild(tr);
+    });
+    const totalPago = r.rows.reduce((s,x)=>s+x.pago,0) + (r.aoAto ? r.parcela : 0);
+    $('f-rend').textContent = '+ ' + brl(r.totalRend);
+    $('f-pago').textContent = '\u2212 ' + brl(totalPago);
+    $('f-final').textContent = brl(r.bruto);
+  }
+
+  Object.values(els).forEach(el=>{
+    el.addEventListener('input', render);
+    el.addEventListener('change', render);
+  });
+  render();
+})();
+</script>
+</body>
+</html>
