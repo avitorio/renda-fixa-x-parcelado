@@ -3,10 +3,71 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Comprar parcelado e deixar rendendo · Calculadora</title>
+<title>Comprar parcelado e investir rende quanto? Calculadora CDB × parcelas</title>
+
+<!-- Ícones -->
+<link rel="icon" type="image/png" href="/images/favicon-96x96.png" sizes="96x96" />
+<link rel="icon" type="image/svg+xml" href="/images/favicon.svg" />
+<link rel="shortcut icon" href="/images/favicon.ico" />
+<link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png" />
+<link rel="manifest" href="/site.webmanifest" />
+
+<!-- SEO -->
+<meta name="description" content="Calculadora gratuita: descubra quanto você economiza ao comprar parcelado sem juros e deixar o dinheiro rendendo num CDB. Considera CDI, Imposto de Renda e o valor real ajustado pela inflação (IPCA).">
+<meta name="keywords" content="calculadora CDB, comprar parcelado, parcelado sem juros, investir parcelas, 100% do CDI, rendimento CDB, valor real inflação, IPCA, renda fixa">
+<meta name="author" content="André Vitório">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#0D1F1A">
+<link rel="canonical" href="https://renda-fixa-x-parcelado.pages.dev/">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Renda fixa × parcelado">
+<meta property="og:url" content="https://renda-fixa-x-parcelado.pages.dev/">
+<meta property="og:title" content="Comprar parcelado e investir rende quanto? Calculadora CDB × parcelas">
+<meta property="og:description" content="Descubra quanto você economiza ao comprar parcelado sem juros e deixar o dinheiro rendendo num CDB — com CDI, Imposto de Renda e valor real pela inflação.">
+<meta property="og:image" content="https://renda-fixa-x-parcelado.pages.dev/images/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Calculadora: comprar parcelado e deixar o dinheiro rendendo no CDB">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@andrevitorio">
+<meta name="twitter:creator" content="@andrevitorio">
+<meta name="twitter:title" content="Comprar parcelado e investir rende quanto? Calculadora CDB × parcelas">
+<meta name="twitter:description" content="Descubra quanto você economiza ao comprar parcelado sem juros e deixar o dinheiro rendendo num CDB — com CDI, IR e valor real pela inflação.">
+<meta name="twitter:image" content="https://renda-fixa-x-parcelado.pages.dev/images/og.png">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<!-- Dados estruturados -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Calculadora: comprar parcelado × investir no CDB",
+  "url": "https://renda-fixa-x-parcelado.pages.dev/",
+  "applicationCategory": "FinanceApplication",
+  "operatingSystem": "Web",
+  "description": "Calcula quanto você economiza ao comprar parcelado sem juros e deixar o dinheiro rendendo num CDB, considerando CDI, Imposto de Renda e o valor real ajustado pela inflação.",
+  "inLanguage": "pt-BR",
+  "offers": { "@type": "Offer", "price": "0", "priceCurrency": "BRL" },
+  "author": {
+    "@type": "Person",
+    "name": "André Vitório",
+    "url": "https://andrevitorio.com",
+    "sameAs": [
+      "https://x.com/andrevitorio",
+      "https://www.linkedin.com/in/andrevitorio",
+      "https://github.com/avitorio"
+    ]
+  }
+}
+</script>
 <style>
   :root{
     --ink:#0D1F1A;          /* deep forest ink - hero panel */
@@ -115,10 +176,13 @@
     color:var(--emerald);font-family:'JetBrains Mono',monospace;font-size:12.5px;font-weight:600;
     padding:6px 11px;border-radius:9px;
   }
+  .realnote{font-family:'JetBrains Mono',monospace;font-size:12px;color:#8fb1a4;margin-top:10px}
+  .realnote b{color:#cfe7df}
   .hero hr{border:none;border-top:1px solid var(--line-ink);margin:18px 0}
   .mini{display:grid;grid-template-columns:1fr 1fr;gap:14px}
   .mini .k{font-size:11.5px;color:#8fb1a4;letter-spacing:.02em;text-transform:uppercase;font-family:'JetBrains Mono',monospace}
   .mini .v{font-family:'Space Grotesk',sans-serif;font-size:18px;font-weight:500;color:#EAF2EE;margin-top:3px;font-variant-numeric:tabular-nums}
+  .mini .v.real{color:var(--emerald)}
 
   /* ---- chart ---- */
   .chart-card{margin-top:18px;padding:22px}
@@ -161,6 +225,28 @@
   footer{margin-top:26px;color:var(--muted);font-size:12px;line-height:1.6;max-width:70ch}
   footer b{color:var(--text);font-weight:600}
   .disclaimer{margin-top:10px}
+
+  .site-footer{
+    max-width:none;margin-top:22px;padding-top:20px;border-top:1px solid var(--line);
+    display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:14px;
+  }
+  .sf-brand{font-size:13px;color:var(--muted)}
+  .sf-brand a{
+    font-family:'Space Grotesk',sans-serif;font-weight:600;color:var(--text);
+    text-decoration:none;border-bottom:1.5px solid var(--emerald);padding-bottom:1px;
+  }
+  .sf-brand a:hover{color:var(--emerald)}
+  .sf-links{display:flex;flex-wrap:wrap;gap:8px}
+  .sf-links a{
+    display:inline-flex;align-items:center;gap:7px;
+    font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--muted);
+    text-decoration:none;padding:7px 11px;border:1px solid var(--line);border-radius:9px;
+    background:var(--card);transition:color .15s,border-color .15s,transform .15s;
+  }
+  .sf-links a:hover{color:var(--ink);border-color:var(--emerald);transform:translateY(-1px)}
+  .sf-links svg{width:15px;height:15px;flex:0 0 auto;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .sf-links a:focus-visible{outline:none;border-color:var(--emerald);box-shadow:0 0 0 3px #1dbf8e2e}
+  @media(max-width:560px){.site-footer{flex-direction:column;align-items:flex-start}.sf-links{width:100%}}
 </style>
 </head>
 <body>
@@ -201,11 +287,20 @@
         </div>
       </div>
 
-      <div class="field">
-        <label for="pct">Quanto do CDI o CDB rende</label>
-        <div class="control">
-          <input class="has-right" type="number" id="pct" value="100" min="0" step="1" inputmode="decimal">
-          <span class="affix right">% do CDI</span>
+      <div class="row2">
+        <div class="field">
+          <label for="pct">CDB rende</label>
+          <div class="control">
+            <input class="has-right" type="number" id="pct" value="100" min="0" step="1" inputmode="decimal">
+            <span class="affix right">% CDI</span>
+          </div>
+        </div>
+        <div class="field">
+          <label for="ipca">Inflação (IPCA)</label>
+          <div class="control">
+            <input class="has-right" type="number" id="ipca" value="4.72" min="0" step="0.05" inputmode="decimal">
+            <span class="affix right">% a.a.</span>
+          </div>
         </div>
       </div>
 
@@ -233,12 +328,15 @@
       <div class="bignum" id="bignum">R$ 0</div>
       <p class="sub">Esse é o rendimento líquido que sobra no CDB depois de pagar <b id="sub-parcelas">todas as parcelas</b>. Na prática, é como ganhar um desconto na compra.</p>
       <div class="pill" id="pill">desconto de 0%</div>
+      <div class="realnote" id="realnote">≈ R$ 0 em poder de compra de hoje</div>
       <hr>
       <div class="mini">
         <div><div class="k">Parcela mensal</div><div class="v" id="m-parcela">R$ 0</div></div>
         <div><div class="k">Custo real da compra</div><div class="v" id="m-custo">R$ 0</div></div>
         <div><div class="k">Rendimento bruto</div><div class="v" id="m-bruto">R$ 0</div></div>
         <div><div class="k">Imposto de Renda</div><div class="v" id="m-ir">R$ 0</div></div>
+        <div><div class="k">Economia real (hoje)</div><div class="v real" id="m-real">R$ 0</div></div>
+        <div><div class="k">CDB acima da inflação</div><div class="v" id="m-realrate">0% a.a.</div></div>
       </div>
     </section>
   </div>
@@ -271,7 +369,32 @@
 
   <footer>
     <b>Como a conta funciona:</b> o CDB rende juros compostos sobre o saldo (taxa mensal equivalente ao CDI anual escolhido). Todo mês entra o rendimento e sai uma parcela. Como você deposita o valor da compra e saca exatamente esse mesmo valor em parcelas, o que sobra no fim é puro rendimento — a sua economia.
-    <div class="disclaimer"><b>Estimativa, não garantia.</b> O CDI é pós-fixado e muda com a Selic. O IR usa a tabela regressiva pelo prazo total da aplicação (uma simplificação — na prática cada saque é tributado pelo seu próprio prazo). Não considera IOF (zera após 30 dias) nem eventual carência de liquidez do CDB. Confira sempre as condições do seu título e a taxa CDI vigente.</div>
+    <div class="disclaimer"><b>Valor real:</b> a "economia real" traz o ganho líquido (que aparece no fim do prazo) para o poder de compra de hoje, descontando a inflação (IPCA) do período. O "CDB acima da inflação" é o juro real anual do título — quanto ele rende além de repor a inflação.</div>
+    <div class="disclaimer"><b>Estimativa, não garantia.</b> O CDI e o IPCA são pós-fixados e mudam com a economia. O IR usa a tabela regressiva pelo prazo total da aplicação (uma simplificação — na prática cada saque é tributado pelo seu próprio prazo). Não considera IOF (zera após 30 dias) nem eventual carência de liquidez do CDB. Confira sempre as condições do seu título e as taxas vigentes.</div>
+  </footer>
+
+  <footer class="site-footer">
+    <div class="sf-brand">
+      Feito por <a href="https://andrevitorio.com" rel="me">André Vitório</a>
+    </div>
+    <nav class="sf-links" aria-label="Redes do autor">
+      <a href="https://andrevitorio.com" rel="me" aria-label="Site pessoal andrevitorio.com">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Zm0 0c2.5 2.5 4 6 4 10s-1.5 7.5-4 10c-2.5-2.5-4-6-4-10s1.5-7.5 4-10ZM2 12h20"/></svg>
+        <span>AndreVitorio.com</span>
+      </a>
+      <a href="https://x.com/andrevitorio" target="_blank" rel="me noopener" aria-label="Perfil no X (Twitter)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" stroke="none" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24h-6.657l-5.214-6.817-5.966 6.817H1.683l7.73-8.835L1.254 2.25H8.08l4.713 6.231 5.45-6.231Zm-1.161 17.52h1.833L7.084 4.126H5.117l11.966 15.644Z"/></svg>
+        <span>@andrevitorio</span>
+      </a>
+      <a href="https://www.linkedin.com/in/andrevitorio" target="_blank" rel="me noopener" aria-label="Perfil no LinkedIn">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" stroke="none" d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.86 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14ZM7.12 20.45H3.55V9h3.57v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.22.79 24 1.77 24h20.45c.98 0 1.78-.78 1.78-1.73V1.73C24 .77 23.2 0 22.22 0Z"/></svg>
+        <span>/andrevitorio</span>
+      </a>
+      <a href="https://github.com/avitorio" target="_blank" rel="me noopener" aria-label="Perfil no GitHub">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" stroke="none" d="M12 .5a11.5 11.5 0 0 0-3.64 22.41c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.2 1.77 1.2 1.03 1.77 2.7 1.26 3.36.96.1-.75.4-1.26.73-1.55-2.56-.29-5.25-1.28-5.25-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.8 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.69 5.41-5.26 5.69.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg>
+        <span>avitorio</span>
+      </a>
+    </nav>
   </footer>
 </div>
 
@@ -280,7 +403,7 @@
   const $ = id => document.getElementById(id);
   const els = {
     valor:$('valor'), parcelas:$('parcelas'), cdi:$('cdi'), pct:$('pct'),
-    ir:$('ir'), aoato:$('aoato')
+    ipca:$('ipca'), ir:$('ir'), aoato:$('aoato')
   };
 
   const brl = (v, dec=2) => v.toLocaleString('pt-BR',{style:'currency',currency:'BRL',minimumFractionDigits:dec,maximumFractionDigits:dec});
@@ -299,6 +422,7 @@
     const n = Math.max(1, Math.min(120, Math.round(+els.parcelas.value || 1)));
     const cdiAA = Math.max(0, +els.cdi.value || 0)/100;
     const pct = Math.max(0, +els.pct.value || 0)/100;
+    const inflAA = Math.max(0, +els.ipca.value || 0)/100;
     const descontaIR = els.ir.checked;
     const aoAto = els.aoato.checked;
 
@@ -334,7 +458,15 @@
     const custoReal = valor - liquido;
     const descontoPct = valor > 0 ? (liquido / valor) * 100 : 0;
 
-    return {valor,n,parcela,i,rows,bruto,imposto,liquido,custoReal,descontoPct,aliq,descontaIR,aoAto,totalRend};
+    // Inflação: traz a economia líquida (que aparece no fim) para o poder de compra de hoje
+    const inflFator = Math.pow(1 + inflAA, mesesAtivos/12);  // inflação acumulada no prazo
+    const inflAcumPct = (inflFator - 1) * 100;
+    const economiaReal = liquido / inflFator;                // valor real (descontando inflação)
+    const descontoRealPct = valor > 0 ? (economiaReal / valor) * 100 : 0;
+    const cdbRealAA = (1 + cdbAA) / (1 + inflAA) - 1;         // juro real do CDB ao ano
+
+    return {valor,n,parcela,i,rows,bruto,imposto,liquido,custoReal,descontoPct,aliq,descontaIR,aoAto,totalRend,
+            inflAA,inflAcumPct,economiaReal,descontoRealPct,cdbRealAA,mesesAtivos};
   }
 
   function renderBignum(v){
@@ -354,6 +486,10 @@
     $('m-custo').textContent = brl(r.custoReal);
     $('m-bruto').textContent = brl(r.bruto);
     $('m-ir').textContent = r.descontaIR ? '\u2212 ' + brl(r.imposto) + '  (' + (r.aliq*100).toLocaleString('pt-BR') + '%)' : 'isento';
+    $('m-real').textContent = brl(r.economiaReal);
+    $('m-realrate').textContent = (r.cdbRealAA*100).toLocaleString('pt-BR',{maximumFractionDigits:2}) + '% a.a.';
+    $('realnote').innerHTML = '\u2248 <b>' + brl(r.economiaReal) + '</b> em poder de compra de hoje &middot; inflação de ' +
+      r.inflAcumPct.toLocaleString('pt-BR',{maximumFractionDigits:2}) + '% no período';
 
     // chart
     const chart = $('chart');
